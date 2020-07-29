@@ -42,21 +42,20 @@ void enqueue(Queue<int> *bq, unsigned int thread_id) {
 
 int main() {
     auto *bq = new Queue<int>(numOfThreads);
-    std::thread *threads = new std::thread[128];
-    for (int i = 0; i < 128; i++) {
-        threads[i](enqueue, bq, i);
-    }
-    sleep(3);
-    isDone = true;
-    for (int i = 0; i < 128; i++) {
-        threads[i].join();
-    }
+	std::thread t[numOfThreads];
+	for (int i = 0; i < numOfThreads; i++) {
+		t[i] = std::thread(enqueue, bq, i);
+	}
+	sleep(3);
+	isDone = true;	
+	for (int i = 0; i < numOfThreads; i++) {
+		t[i].join();
+	}	
     int sum = 0;
     for (int i : opNum) {
         sum += i * batchSize;
     }
     std::cout << "Number of op, Thread Sum:" << sum / 3 << std::endl;
     delete (bq);
-    delete [] threads;
     return 0;
 }
