@@ -13,7 +13,7 @@
 * A struct for the head/tail of the queue. 
 */
 template<typename T>
-class PtrCnt {
+class  alignas(16) PtrCnt {
 public:
     Node<T> *node;
     unsigned int cnt;
@@ -59,7 +59,7 @@ public:
 * This used for the head of the queue, which can have Ann, noting a future batch.
 */
 template<typename T>
-union PtrCntOrAnn {
+union  alignas(16) PtrCntOrAnn {
 public:
     PtrCnt<T> ptrCnt;
     AnnAndTag<T> annAndTag;

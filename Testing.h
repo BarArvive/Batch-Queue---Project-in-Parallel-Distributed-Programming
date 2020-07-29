@@ -126,7 +126,7 @@ public:
         //printQueue(queue3);
         int count = 0;
         int null_nodes_counter = 0;
-        Node<int> *node = queue3->ASQHead.load(std::memory_order_relaxed).ptrCnt.node;
+        Node<int> *node = queue3->HelpAnnAndGetHead(0).node;
 		//node = NULL;
 		node = node->next;
         while (node != NULL) {

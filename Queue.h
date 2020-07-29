@@ -386,9 +386,9 @@ public:
         }
         ann->oldHead.node->item = lastDequeuedItem;
         threadData[thread_id].nodeHp = NULL;
-        anAnn.annAndTag = {1, ann};
-        temp = {newHeadNode, ann->oldHead.cnt + successfulDeqsNum};
-        ASQHead.compare_exchange_weak(anAnn, temp, std::memory_order_release, std::memory_order_relaxed);
+        anAnn.annAndTag = {1, ann}; 
+        ASQHead.compare_exchange_strong(anAnn, {{newHeadNode, ann->oldHead.cnt + successfulDeqsNum}}); 
+		
     }
 
     /*
@@ -488,6 +488,9 @@ public:
         return RecordOpAndGetFuture(DEQ, thread_id);
     }
 
+	/*
+	* removes the last future operation that submitted by the thread
+	*/
     void UndoFuture(unsigned int thread_id) {
         if (threadData[thread_id].opsQueue.empty())
             return;
@@ -747,13 +750,24 @@ public:
     Deletes all memory that saved in the queue, including nodes, anns, and futures.
     */
     ~Queue() {
-        Node<T> *node = ASQHead.load(std::memory_order_relaxed).ptrCnt.node;
+		PtrCntOrAnn<T> a = ASQHead.load(std::memory_order_relaxed);
+		Node<T> *node;
+		if (a.annAndTag.tag & 1) {
+			//std::cout << "check" << std::endl;
+			node = HelpAnnAndGetHead(0).node;
+		}
+		else {
+			node = ASQHead.load(std::memory_order_relaxed).ptrCnt.node;
+		}
         Node<T> *nodeToDel;
         while (node != NULL) {
             nodeToDel = node;
             node = node->next;
             MM.Retire(nodeToDel, &nodesToDel[0], 0);
         }
+		for (int i = 0; i < numOfThreads; i++) {
+			HelpAnnAndGetHead(i);
+		}
         for (int i = 0; i < numOfThreads; i++) {
             while (!this->futureToDel[i].empty()) {
                 delete (futureToDel[i].front());
