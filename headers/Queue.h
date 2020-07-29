@@ -208,7 +208,7 @@ public:
             dequeuedItem = headNextNode->item;
             if (ASQHead.compare_exchange_weak(headAndCntOrAnn, {{headNextNode, headAndCnt.cnt + 1}},
                                               std::memory_order_release, std::memory_order_relaxed)) {
-                MM.Retire(headAndCnt.node, &nodesToDel[thread_id], threadData);
+                MM.Retire(headAndCnt.node, &nodesToDel[thread_id]);
                 return dequeuedItem;
             }
 
@@ -619,7 +619,7 @@ public:
                 else {
                     nodePrecedingDeqNode = currentHead;
                     currentHead = currentHead->next;
-                    MM.Retire(nodePrecedingDeqNode, &nodesToDel[thread_id], threadData);
+                    MM.Retire(nodePrecedingDeqNode, &nodesToDel[thread_id]);
                     if (currentHead == threadData[thread_id].enqsTail)
                         noMoreSuccessfulDeqs = true;
                     if (shouldSetPrevDeqResult) {
@@ -716,7 +716,7 @@ public:
             for (int i = 0; i < successfulDeqsNum - 1; i++) {
                 nodePrecedingDeqNode = currentHead;
                 currentHead = currentHead->next;
-                MM.Retire(nodePrecedingDeqNode, &nodesToDel[thread_id], threadData);
+                MM.Retire(nodePrecedingDeqNode, &nodesToDel[thread_id]);
                 op = threadData[thread_id].opsQueue.front();
                 threadData[thread_id].opsQueue.pop();
                 op.future->result = currentHead->item;
@@ -726,7 +726,7 @@ public:
                 }
                 this->futureToDel[thread_id].push(op.future);
             }
-            MM.Retire(currentHead, &nodesToDel[thread_id], threadData);
+            MM.Retire(currentHead, &nodesToDel[thread_id]);
             op = threadData[thread_id].opsQueue.front();
             threadData[thread_id].opsQueue.pop();
             op.future->result = lastDeqItem;
@@ -762,7 +762,7 @@ public:
         while (node != NULL) {
             nodeToDel = node;
             node = node->next;
-            MM.Retire(nodeToDel, &nodesToDel[0], 0);
+            MM.Retire(nodeToDel, &nodesToDel[0]);
         }
         for (int i = 0; i < numOfThreads; i++) {
             HelpAnnAndGetHead(i);

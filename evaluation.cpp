@@ -55,7 +55,7 @@ int main() {
     for (int i : opNum) {
         sum += i * batchSize;
     }
-    std::cout << "Number of op, Thread Sum:" << sum / 3 << std::endl;
+    std::cout << "Number of ops:" << sum / 3 << std::endl;
     delete (bq);
     return 0;
 }
