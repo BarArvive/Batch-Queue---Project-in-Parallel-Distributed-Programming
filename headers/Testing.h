@@ -65,8 +65,8 @@ public:
         int null_nodes_counter = 0;
         Node<int> *node = queue1->ASQHead.load(std::memory_order_relaxed).ptrCnt.node;
         node = node->next;
-        while (node != nullptr) {
-            if (node->item == nullptr) {
+        while (node != NULL) {
+            if (node->item == NULL) {
                 null_nodes_counter++;
                 node = node->next;
                 continue;
@@ -82,7 +82,7 @@ public:
             std::cout << "FAIL AT 65::EnqTest" << std::endl;
             return ENQUEUE_FAIL;
         }
-        while (queue1->Dequeue(0) != nullptr) {}
+        while (queue1->Dequeue(0) != NULL) {}
         return SUCCESS;
     }
 
@@ -133,8 +133,8 @@ public:
         Node<int> *node = queue3->HelpAnnAndGetHead(0).node;
         //node = NULL;
         node = node->next;
-        while (node != nullptr) {
-            if (node->item == nullptr) {
+        while (node != NULL) {
+            if (node->item == NULL) {
                 null_nodes_counter++;
                 node = node->next;
                 continue;
@@ -150,7 +150,7 @@ public:
             std::cout << "FAIL AT 127::FutureEnqTest" << std::endl;
             return FUTURE_ENQUEUE_FAIL;
         }
-        while (queue3->Dequeue(0) != nullptr) {}
+        while (queue3->Dequeue(0) != NULL) {}
         return SUCCESS;
     }
 
@@ -245,8 +245,8 @@ public:
     static void printQueue(Queue<int> *queue5) {
         Node<int> *node = queue5->ASQHead.load(std::memory_order_relaxed).ptrCnt.node;
         node = node->next; //head is dummy!
-        while (node != nullptr) {
-            if (node->item == nullptr) {
+        while (node != NULL) {
+            if (node->item == NULL) {
                 node = node->next;
                 continue;
             }
