@@ -4,7 +4,7 @@
 * [User Manual](docs/User%20manual.docx) - includes also programmer guide and documentation.
 * [Batch Queue pptx](docs/Batch%20Queue.pptx) - project presentation.
 * [Performance Evaluation](docs/BQueue.xlsx) - results of 240 executions, by threads number and batch size.
-* [Performance Results - Graphs](docs/Performance%and%Evaluation.docx) - graphs of performance, based on results of 240 executions. 
+* [Performance Results - Graphs](docs/Performance%20and%20Evaluation.docx) - graphs of performance, based on results of 240 executions. 
 
 #### How to compile?  
 `g++ -std=c++11  -pthread -march=native  *.cpp -o prog_name`
